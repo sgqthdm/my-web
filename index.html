@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我的个人主页</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg2: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent2: #818cf8;
+    --card: #1e293b;
+    --border: #334155;
+  }
+
+  body.light {
+    --bg: #f8fafc;
+    --bg2: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --accent: #0284c7;
+    --accent2: #6366f1;
+    --card: #ffffff;
+    --border: #e2e8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+    line-height: 1.6;
+  }
+
+  /* 导航栏 */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+  }
+
+  body.light nav { background: rgba(248, 250, 252, 0.8); }
+
+  nav .logo {
+    font-weight: bold;
+    font-size: 1.2rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+  }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 0.95rem;
+  }
+
+  nav a:hover { color: var(--accent); }
+
+  .theme-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+
+  .theme-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* 首屏 */
+  header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background: radial-gradient(circle at 50% 30%, var(--bg2), var(--bg));
+  }
+
+  header h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .typing {
+    font-size: 1.3rem;
+    color: var(--muted);
+    min-height: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .typing::after {
+    content: '|';
+    animation: blink 1s infinite;
+    color: var(--accent);
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  .btn-group { display: flex; gap: 1rem; }
+
+  .btn {
+    padding: 0.8rem 1.8rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff;
+  }
+
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3); }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* 通用 section */
+  section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  section h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  section h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    margin: 0.8rem auto 0;
+    border-radius: 2px;
+  }
+
+  /* 技能条 */
+  .skill {
+    margin-bottom: 1.5rem;
+  }
+
+  .skill-name {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .skill-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+    transition: width 1.5s ease;
+  }
+
+  /* 项目卡片 */
+  .projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .card h3 {
+    margin-bottom: 0.8rem;
+    color: var(--accent);
+  }
+
+  .card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* 时间线 */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    border-left: 2px solid var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.6rem;
+    top: 0.3rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--bg);
+  }
+
+  .timeline-item h4 { margin-bottom: 0.3rem; }
+
+  .timeline-item span {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* 底部 */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* 返回顶部 */
+  #top-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s;
+    z-index: 99;
+  }
+
+  #top-btn.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #top-btn:hover { transform: translateY(-5px); }
+
+  @media (max-width: 600px) {
+    nav ul { display: none; }
+    header h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">My Portfolio</div>
+  <ul>
+    <li><a href="#about">关于</a></li>
+    <li><a href="#skills">技能</a></li>
+    <li><a href="#projects">项目</a></li>
+    <li><a href="#timeline">经历</a></li>
+  </ul>
+  <button class="theme-btn" onclick="toggleTheme()">🌓 切换主题</button>
+</nav>
+
+<header>
+  <h1>你好，我是 XXX</h1>
+  <div class="typing" id="typing"></div>
+  <div class="btn-group">
+    <a href="#projects" class="btn btn-primary">查看项目</a>
+    <a href="#about" class="btn btn-outline">了解更多</a>
+  </div>
+</header>
+
+<section id="about">
+  <h2>关于我</h2>
+  <p style="text-align:center; color:var(--muted); max-width:700px; margin:0 auto;">
+    这里写一段自我介绍。比如：我是一名计算机专业的学生，对云计算、分布式系统和 Web 开发感兴趣。
+    这个页面是我在 GitHub Pages 上发布的第一个静态网站，用来练习 HTML、CSS 和 JavaScript。
+  </p>
+</section>
+
+<section id="skills">
+  <h2>技能</h2>
+  <div class="skill">
+    <div class="skill-name"><span>HTML / CSS</span><span>90%</span></div>
+    <div class="skill-bar"><div class="skill-fill" data-width="90%"></div></div>
+  </div>
+  <div class="skill">
+    <div class="skill-name"><span>JavaScript</span><span>75%</span></div>
+    <div class="skill-bar"><div class="skill-fill" data-width="75%"></div></div>
+  </div>
+  <div class="skill">
+    <div class="skill-name"><span>Python</span><span>80%</span></div>
+    <div class="skill-bar"><div class="skill-fill" data-width="80%"></div></div>
+  </div>
+  <div class="skill">
+    <div class="skill-name"><span>云计算 / Linux</span><span>70%</span></div>
+    <div class="skill-bar"><div class="skill-fill" data-width="70%"></div></div>
+  </div>
+</section>
+
+<section id="projects">
+  <h2>项目</h2>
+  <div class="projects">
+    <div class="card">
+      <h3>项目一</h3>
+      <p>这里写项目简介。比如基于 GitHub Pages 搭建的个人主页。</p>
+    </div>
+    <div class="card">
+      <h3>项目二</h3>
+      <p>这里写项目简介。比如用 Python 写的一个小工具。</p>
+    </div>
+    <div class="card">
+      <h3>项目三</h3>
+      <p>这里写项目简介。比如云计算实验中的 Web 服务器部署。</p>
+    </div>
+  </div>
+</section>
+
+<section id="timeline">
+  <h2>经历</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <h4>2024 - 至今</h4>
+      <span>在某大学学习计算机相关课程</span>
+    </div>
+    <div class="timeline-item">
+      <h4>2025</h4>
+      <span>完成云计算与分布式系统实验，使用 GitHub Pages 发布个人主页</span>
+    </div>
+    <div class="timeline-item">
+      <h4>未来</h4>
+      <span>继续学习云原生、容器化和分布式系统</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 XXX · 由 <a href="https://pages.github.com" target="_blank">GitHub Pages</a> 托管</p>
+</footer>
+
+<button id="top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<script>
+  // 打字机效果
+  const texts = ['云计算与分布式系统实验', 'GitHub Pages 静态网站', 'HTML + CSS + JavaScript'];
+  let textIndex = 0, charIndex = 0, deleting = false;
+  const typingEl = document.getElementById('typing');
+
+  function type() {
+    const current = texts[textIndex];
+    if (!deleting) {
+      typingEl.textContent = current.substring(0, charIndex++);
+      if (charIndex > current.length) {
+        deleting = true;
+        setTimeout(type, 1500);
+        return;
+      }
+    } else {
+      typingEl.textContent = current.substring(0, charIndex--);
+      if (charIndex < 0) {
+        deleting = false;
+        textIndex = (textIndex + 1) % texts.length;
+      }
+    }
+    setTimeout(type, deleting ? 50 : 120);
+  }
+  type();
+
+  // 技能条动画
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-fill').forEach(bar => {
+          bar.style.width = bar.dataset.width;
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(document.getElementById('skills'));
+
+  // 主题切换
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+  }
+
+  // 返回顶部按钮
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('top-btn');
+    if (window.scrollY > 300) btn.classList.add('show');
+    else btn.classList.remove('show');
+  });
+</script>
+
+</body>
+</html>
